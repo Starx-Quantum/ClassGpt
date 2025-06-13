@@ -1,3 +1,4 @@
+{
   "name": "classgpt-backend",
   "version": "1.0.0",
   "description": "AI Professor Backend API for generating educational content",
@@ -29,4 +30,4 @@
   "keywords": ["ai", "education", "llm", "notes", "slides", "mcq"],
   "author": "ClassGPT Team",
   "license": "MIT"
-};
+}
