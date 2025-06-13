@@ -1,4 +1,3 @@
-const packageJson = {
   "name": "classgpt-backend",
   "version": "1.0.0",
   "description": "AI Professor Backend API for generating educational content",
