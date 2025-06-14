@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  classgpt-api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: classgpt-backend
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - PORT=3000
+    volumes:
+      # Mount data directory for persistence
+      - ./data:/app/data
+      - ./exports:/app/exports
+      # Mount source code for development (comment out for production)
+      - .:/app
+      - /app/node_modules
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: Add Redis for caching (future enhancement)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: classgpt-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: unless-stopped
+
+  # Optional: Add monitoring with Prometheus (future enhancement)
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: classgpt-prometheus
+  #   ports:
+  #     - "9090:9090"
+  #   volumes:
+  #     - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+  #   restart: unless-stopped
+
+volumes:
+  redis_data:
+    driver: local
+
+networks:
+  default:
+    name: classgpt-network
